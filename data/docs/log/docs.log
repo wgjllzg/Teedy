@@ -3315,3 +3315,5 @@ Caused by: java.lang.NullPointerException: Cannot invoke "String.toCharArray()" 
 13 May 2025 22:01:15,190 INFO com.sismics.docs.core.service.FileSizeService.shutDown(FileSizeService.java:35) File size service shutting down 
 13 May 2025 22:01:29,480 INFO com.sismics.util.ClasspathScanner.findClasses(ClasspathScanner.java:48) Found 2 classes for AuthenticationHandler 
 13 May 2025 22:03:02,734 INFO com.sismics.docs.rest.resource.UserResource.update(UserResource.java:253) y 
+13 May 2025 22:12:06,337 INFO com.sismics.docs.core.service.InboxService.shutDown(InboxService.java:57) Inbox service shutting down 
+13 May 2025 22:12:06,338 INFO com.sismics.docs.core.service.FileService.shutDown(FileService.java:44) File service shutting down 
