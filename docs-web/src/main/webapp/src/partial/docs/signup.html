@@ -102,17 +102,6 @@
       </div>
     </div>
 
-    <div class="form-group" ng-show="isEdit() && user.username != 'admin' && user.username != 'guest'">
-      <div class="col-sm-offset-2 col-sm-10">
-        <div class="checkbox text-danger">
-          <label>
-            <input name="approved" type="checkbox" ng-model="user.approved" />
-            <strong>授权用户</strong>
-          </label>
-        </div>
-      </div>
-    </div>
-
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
         <button type="submit" class="btn btn-primary" ng-click="edit()" ng-disabled="!editUserForm.$valid">

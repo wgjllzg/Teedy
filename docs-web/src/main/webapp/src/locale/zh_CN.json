@@ -7,6 +7,7 @@
     "validation_code": "验证码",
     "remember_me": "记住我",
     "submit": "登录",
+    "signup": "注册",
     "login_as_guest": "以游客身份登录",
     "login_failed_title": "登录失败",
     "login_failed_message": "用户名或密码不正确",
@@ -15,6 +16,14 @@
     "password_lost_sent_message": "重置密码的邮件已经发送至<strong>{{ username }}</strong>",
     "password_lost_error_title": "密码重置出错",
     "password_lost_error_message": "无法发送密码重置邮件，请联系您的管理员进行手动重置"
+  },
+  "signup": {
+    "title": "注册",
+    "username":"用户名",
+    "email":"邮箱",
+    "message":"留言",
+    "submit":"注册",
+    "back_to_login":"返回登录界面"
   },
   "passwordlost": {
     "title": "丢失密码",

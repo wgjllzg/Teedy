@@ -364,6 +364,15 @@ angular.module('docs',
         }
       }
     })
+    .state('signup', {
+      url: '/signup',
+      views: {
+        'page': {
+          templateUrl: 'partial/docs/signup.html',
+          controller: 'Signup'
+        }
+      }
+    })
     .state('user', {
       url: '/user',
       abstract: true,

@@ -95,6 +95,21 @@ public class User implements Loggable {
     @Column(name = "USE_DISABLEDATE_D")
     private Date disableDate;
 
+     /** 
+      * 管理员审批开关，只有为 true 时才允许登录 
+      */
+    @Column(name = "USE_APPROVED_B", nullable = false)
+    private boolean approved;
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public User setApproved(boolean approved) {
+        this.approved = approved;
+        return this;
+    }
+
     public String getId() {
         return id;
     }

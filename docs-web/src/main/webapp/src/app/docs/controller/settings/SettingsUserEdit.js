@@ -32,6 +32,7 @@ angular.module('docs').controller('SettingsUserEdit', function($scope, $dialog, 
     user.storage_quota *= 1000000;
     
     if ($scope.isEdit()) {
+      console.log(user);
       promise = Restangular
         .one('user', $stateParams.username)
         .post('', user);

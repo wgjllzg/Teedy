@@ -47,6 +47,19 @@ public class UserDto {
      * TOTP key.
      */
     private String totpKey;
+    
+    /**
+     * approved
+     */
+    private boolean approved;
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
 
     public String getId() {
         return id;

@@ -1,5 +1,7 @@
 package com.sismics.docs.rest.resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.sismics.docs.core.constant.AclTargetType;
@@ -51,6 +53,7 @@ import java.util.Set;
  */
 @Path("/user")
 public class UserResource extends BaseResource {
+    private static final Logger log = LoggerFactory.getLogger(UserResource.class);
     /**
      * Creates a new user.
      *
@@ -81,10 +84,10 @@ public class UserResource extends BaseResource {
         @FormParam("password") String password,
         @FormParam("email") String email,
         @FormParam("storage_quota") String storageQuotaStr) {
-        if (!authenticate()) {
-            throw new ForbiddenClientException();
-        }
-        checkBaseFunction(BaseFunction.ADMIN);
+        // if (!authenticate()) {
+        //     throw new ForbiddenClientException();
+        // }
+        // checkBaseFunction(BaseFunction.ADMIN);
         
         // Validate the input data
         username = ValidationUtil.validateLength(username, "username", 3, 50);
@@ -102,11 +105,12 @@ public class UserResource extends BaseResource {
         user.setEmail(email);
         user.setStorageQuota(storageQuota);
         user.setOnboarding(true);
+        user.setApproved(false);
 
         // Create the user
         UserDao userDao = new UserDao();
         try {
-            userDao.create(user, principal.getId());
+            userDao.create(user, "666");
         } catch (Exception e) {
             if ("AlreadyExistingUsername".equals(e.getMessage())) {
                 throw new ClientException("AlreadyExistingUsername", "Login already used", e);
@@ -201,7 +205,8 @@ public class UserResource extends BaseResource {
         @FormParam("password") String password,
         @FormParam("email") String email,
         @FormParam("storage_quota") String storageQuotaStr,
-        @FormParam("disabled") Boolean disabled) {
+        @FormParam("disabled") Boolean disabled, 
+        @FormParam("approved") Boolean approved) {
         if (!authenticate()) {
             throw new ForbiddenClientException();
         }
@@ -242,6 +247,11 @@ public class UserResource extends BaseResource {
                 user.setDisableDate(null);
             }
         }
+        if (approved != null){
+            user.setApproved(approved);
+        }
+        log.info(user.isApproved()?"y":"n");
+
         user = userDao.update(user, principal.getId());
         
         // Change the password
@@ -682,7 +692,8 @@ public class UserResource extends BaseResource {
                 .add("totp_enabled", user.getTotpKey() != null)
                 .add("storage_quota", user.getStorageQuota())
                 .add("storage_current", user.getStorageCurrent())
-                .add("disabled", user.getDisableDate() != null);
+                .add("disabled", user.getDisableDate() != null)
+                .add("approved", user.isApproved());
         return Response.ok().entity(response.build()).build();
     }
 
@@ -748,6 +759,7 @@ public class UserResource extends BaseResource {
                     .add("storage_current", userDto.getStorageCurrent())
                     .add("create_date", userDto.getCreateTimestamp())
                     .add("disabled", userDto.getDisableTimestamp() != null));
+                    //.add("approved", userDto.isApproved())
         }
         
         JsonObjectBuilder response = Json.createObjectBuilder()
