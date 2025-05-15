@@ -27,6 +27,8 @@ import com.sismics.util.HttpUtil;
 import com.sismics.util.JsonUtil;
 import com.sismics.util.context.ThreadLocalContext;
 import com.sismics.util.mime.MimeType;
+
+import org.apache.commons.codec.digest.DigestUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -34,6 +36,8 @@ import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -51,6 +55,8 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.Form;
 
 /**
  * File REST resources.
@@ -716,6 +722,60 @@ public class FileResource extends BaseResource {
         List<File> fileList = findFiles(filesIdsList);
         return sendZippedFiles("files", fileList);
     }
+
+    /*  ──────────────────────────────────────────────────────────────
+    *  Translate proxy  - POST /file/translate
+    *  ────────────────────────────────────────────────────────────── */
+    @POST
+    @Path("translate")                                    
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response translateProxy(@FormParam("text") String text,
+                                @FormParam("from") @DefaultValue("auto") String from,
+                                @FormParam("to")   @DefaultValue("zh")   String to) {
+
+        if (text == null || text.trim().isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(Json.createObjectBuilder()
+                            .add("error_msg", "text parameter is required")
+                            .build())
+                        .build();
+        }
+
+        final String APP_ID  = "20250515002358163";
+        final String APP_KEY = "tdbWEVyi94WTrgB6WXyj";
+        String salt = Long.toString(System.currentTimeMillis());
+
+        String signRaw = APP_ID + text + salt + APP_KEY;
+        String sign    = DigestUtils.md5Hex(signRaw);        
+
+        Form form = new Form()
+            .param("q", text)
+            .param("from", from)
+            .param("to", to)
+            .param("appid", APP_ID)
+            .param("salt",  salt)
+            .param("sign",  sign);
+
+        Client client = ClientBuilder.newClient();
+        String baiduResp;
+        try {
+            baiduResp = client
+                .target("https://fanyi-api.baidu.com/api/trans/vip/translate")
+                .request()
+                .post(Entity.entity(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE),
+                    String.class);
+        } catch (Exception e) {
+            return Response.serverError()
+                        .entity(Json.createObjectBuilder()
+                            .add("error_msg", "Cannot reach Baidu API: " + e.getMessage())
+                            .build())
+                        .build();
+        }
+
+        return Response.ok(baiduResp, MediaType.APPLICATION_JSON).build();
+    }
+
 
     /**
      * Sent the content of a list of files.

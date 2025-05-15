@@ -320,6 +320,15 @@ angular.module('docs',
         }
       }
     })
+    .state('document.view.translate', {
+      url: '/translate',
+      views: {
+        'tab': {
+          templateUrl: 'partial/docs/document.view.translate.html',
+          controller: 'DocumentViewTranslate'
+        }
+      }
+    })
     .state('document.view.workflow', {
       url: '/workflow',
       views: {
