@@ -3,7 +3,7 @@
     environment {
         DEPLOYMENT_NAME = "hello-node"
         CONTAINER_NAME = "docs"
-        IMAGE_NAME = "wugujiliu/teedy:latest"
+        IMAGE_NAME = "wugujiliu/teedy"
     }
     stages {
         stage('Start Minikube') {
