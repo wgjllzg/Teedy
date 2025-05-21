@@ -28,8 +28,8 @@
         }
         stage('Verify') {
             steps {
-                sh 'echo'
-                sh 'echo'
+                sh 'echo "kubectl rollout status deployment/${DEPLOYMENT_NAME}"'
+                sh 'echo "kubectl get pods"'
             }
         }
     }
